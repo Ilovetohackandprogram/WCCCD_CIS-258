@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+      Garrick D. Smith
+	  Hands-on Project 05-05
+	   
+	   WCCCD
+	  
+	  07-26-2024
+   -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Garrick's Hands-on Project 5-5</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="Garrick's project05-05.js" defer></script>
+</head>
+
+<body>
+   <header>
+      <h1> Garrick's Hands-on Project 5-5 </h1>
+   </header>
+
+   <section>
+
+      <div id="instruction">
+         <h2>Concentration Game</h2>
+         <p>Click on any tile to flip it and show
+            the image on the back. Matching images will
+            stay up the board. Mismatched images will
+            flip over after a 1-second delay. Locate all
+            eight pairs of matching images.</p>
+         <p>To play again
+            and rescramble the board, reload the web page.
+         </p>
+      </div>
+      <div id="board">
+         <div class="tile">
+            <img src="photo01.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo01.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">            
+         </div> 
+         <div class="tile">     
+            <img src="photo02.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo02.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo03.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo03.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo04.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo04.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo05.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo05.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo06.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo06.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo07.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo07.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div> 
+         <div class="tile">
+            <img src="photo08.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>
+         <div class="tile">
+            <img src="photo08.jpg" alt="" class="front">
+            <img src="back.jpg" alt="" class="back">
+         </div>         
+
+   </div>
+   </section>
+
+</body>
+</html>
+ 90 changes: 90 additions & 0 deletions90  
+Ch5-5/project05-05_txt.js
+Original file line number	Diff line number	Diff line change
+@@ -0,0 +1,90 @@
+"use strict";
+/*    JavaScript 7th Edition
+      Chapter 5
+      Project 05-05
+      Project to create a Concentration game with flipping tiles
+      Author: Nikko Thorne
+      Date:   01/30/22 
+      Filename: project05-05.js
+*/
+
+// Reference to the game board
+let board = document.getElementById("board");
+
+// Reference to the tiles within the game board
+let allTiles = document.getElementsByClassName("tile");
+
+// Objects that will reference the first and second tile clicked by the player
+let firstFlipped;
+let secondFlipped;
+
+// Variable containing the id of a timed command
+let timeID;
+
+// Counter of the number of tiles currently flipped
+let tilesFlipped = 0;
+
+// Functions to run when the page is loaded
+window.addEventListener("load", scrambleTiles);
+window.addEventListener("load", playConcentration);
+
+
+
+// Function that scrambles the order of the tiles within the board
+function scrambleTiles() {
+   for (let i = 0; i <= allTiles.length; i++) {
+
+      // Random index integer from 0 to the number of tiles minus 1
+      let randomIndex = Math.floor(allTiles.length*Math.random());
+
+      // Randomly insert a tile before the current tile in the loop
+      board.insertBefore(board.children[randomIndex], board.children[i]);      
+   }
+}
+
+
+// Function that sets up the game play
+function playConcentration() {
+   // Create event handlers for all tiles in the game board
+   for (let i = 0; i < allTiles.length; i++) {
+
+      // Run when a tile is clicked
+      allTiles[i].onclick = function() {
+         // Test to see if the back of the tile is displayed
+         if (this.lastElementChild.className === "back") {
+
+            tilesFlipped++;  // increase the flip count by 1
+
+            if (tilesFlipped === 1) {
+               // if this is the first tile clicked then flip it
+               firstFlipped = this;
+               firstFlipped.appendChild(firstFlipped.firstElementChild);
+            } else if (tilesFlipped === 2) {
+               // if this is the second tile clicked then flip it
+               // and then flip both tiles back after 1 second
+               secondFlipped = this;
+               secondFlipped.appendChild(secondFlipped.firstElementChild);
+               timeID = window.setTimeout(flipBack, 1000);
+            }
+         }
+      }
+  }
+
+   /* Function to flip the two tiles if they don't match */
+   function flipBack() {
+      // test to determine whether the tile images don't match
+      if (firstFlipped.lastElementChild.src !== secondFlipped.lastElementChild.src) {   
+
+         // if they don't match, then flip each one
+         firstFlipped.appendChild(firstFlipped.firstElementChild);
+         secondFlipped.appendChild(secondFlipped.firstElementChild);
+      }
+
+      // Reset the tiles flipped counter to zero
+      tilesFlipped = 0;
+   }   
+}
+
+
+ 121 changes: 121 additions & 0 deletions121  
+Ch5-5/styles.css
+Original file line number	Diff line number	Diff line change
+@@ -0,0 +1,121 @@
+/*  JavaScript 7th Edition
+    Chapter 5
+    Hands-on Project 5-5
+    Filename: styles.css
+*/
+
+/* apply a natural box layout model to all elements */
+* {
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+/* reset rules */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   font-size: 100%;
+   font: inherit;
+   vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+   display: block;
+}
+
+body {
+   line-height: 1;
+   width: 960px;
+   background: white;
+   margin: 0 auto;
+   font-family: Verdana, Geneva, sans-serif; 
+}
+
+ol, ul {
+   list-style: none;
+}
+
+/* page header */
+header {
+   background: #5472B2;
+   width: 100%;
+   color: #FFFFFF;
+   font-size: 48px;
+   text-align: center;
+   line-height: 1.5em;
+}
+
+
+
+
+/*-------------------- Project Styles ------------------*/
+
+/* main content */
+section {
+   width: 960px;
+   background: #FFDB70;
+   padding-bottom: 20px;
+   height: 560px;
+}
+
+div#instruction {
+   float: left;
+   width: 350px;
+   margin-right: 50px;
+   padding-left: 30px;
+}
+
+div#instruction h2 {
+   text-align: center;
+   font-size: 1.3em;
+   font-weight: bold;
+   margin-bottom: 10px;
+   padding-top: 10px;
+}
+
+div#instruction p {
+   font-size: 1.2em;
+   line-height: 1.4;
+   margin-bottom: 20px;
+}
+
+div#board {
+   width: 520px;
+   height: 520px;
+   float: left;
+   margin-top: 20px;
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: space-around;      
+}
+
+div.tile {
+   position: relative;
+   width: 120px;
+   height: 120px;
+   user-select: none;
+   cursor: pointer;
+}
+
+div.tile img {
+   position: absolute;
+   top: 0;
+   left: 0;
+}
+0 comments on commit 2161c17
+Please sign in to comment.
+Footer
+© 2024 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
